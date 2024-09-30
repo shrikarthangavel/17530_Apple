@@ -1,19 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-import Button from './Button';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import HomePage from './components/HomePage';
+import ManagementPage from './components/ManagementPage';
+import ReturnPage from './components/ReturnPage';
+import CheckoutPage from './components/CheckoutPage';
+import React from 'react';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <a>
-          Team Apple
-        </a>
-        <p>
-          <Button />
-        </p>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/home/management" element={<ManagementPage />} />
+          <Route path="/home/management/checkout" element={<ManagementPage />} />
+          <Route path="/home/management/checkout/return" element={<ReturnPage />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
