@@ -7,7 +7,10 @@ function LoginPage() {
     navigate('/home');
   }
     return (
-      <button onClick={goToAboutPage}>"Welcome to Login Page"</button>
+      <div>
+      <h1>Welcome to the Login Page</h1>
+      <button onClick={goToAboutPage}>"Go To Home Page"</button>
+    </div>
     );
 }
 

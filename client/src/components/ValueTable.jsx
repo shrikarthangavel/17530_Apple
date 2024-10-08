@@ -3,12 +3,12 @@ import React from 'react';
 function ValueTable(props) {
     return (
         <table>
-            <thread>
+            <thead style={{fontSize: "5.5mm"}}>
                 <tr>
                     <th>{props.valueName}</th>
-                    <tr>{props.labelName}</tr>
+                    <th>{props.labelName}</th>
                 </tr>
-            </thread>
+            </thead>
             <tbody>
                 {props.db.map((option, index) => (
                     <tr key={index}>
