@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import ManagementPage from './components/ManagementPage';
 import ReturnPage from './components/ReturnPage';
 import CheckoutPage from './components/CheckoutPage';
+import ProjectDetails from './components/ProjectDetails';
 import React from 'react';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/home/management" element={<ManagementPage />} />
         <Route path="/home/management/checkout" element={<CheckoutPage />} />
+        <Route path="/home/management/checkout/:id" element={<ProjectDetails />} />
         <Route path="/home/management/checkout/return" element={<ReturnPage />} />
       </Routes>
     </Router>
