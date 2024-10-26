@@ -3,34 +3,39 @@ import HardwareSet from './HardwareSet';
 
 function ProjectDetails(props) {
   const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardwareSets);
+  const [projectMembers, setProjectMembers] = useState(props.members)
+  const [newMember, setNewMember] = useState('');
 
-  const handleEnter = (hardwareSetId) => {
+  const handleAddMember = () => {
+    const newMem = { id: 999, name: newMember };
+    const updatedMembers = [...projectMembers, newMem]
+    setProjectMembers(updatedMembers);
+    setNewMember('');
+    console.log(projectMembers);
+  };
+
+  const handleRemoveMember = (toRemove) => {
+    setProjectMembers(projectMembers.filter((member) => member.id !== toRemove))
+    console.log(projectMembers);
+  };
+
+  const handleCheckIn = (hardwareSetId, qty) => {
     const updatedSets = updatedHardwareSets.map((set) => {
       if (set.id === hardwareSetId) {
-        return { ...set, status: 'Updated status' };
+        return { ...set, status: set.status + qty };
       }
       return set;
-    });
+    })
     setUpdatedHardwareSets(updatedSets);
   };
 
-  const handleCheckIn = (hardwareSetId) => {
+  const handleCheckOut = (hardwareSetId, qty) => {
     const updatedSets = updatedHardwareSets.map((set) => {
       if (set.id === hardwareSetId) {
-        return { ...set, status: 'Checked In' };
+        return { ...set, status: set.status - qty };
       }
       return set;
-    });
-    setUpdatedHardwareSets(updatedSets);
-  };
-
-  const handleCheckOut = (hardwareSetId) => {
-    const updatedSets = updatedHardwareSets.map((set) => {
-      if (set.id === hardwareSetId) {
-        return { ...set, status: 'Checked Out' };
-      }
-      return set;
-    });
+    })
     setUpdatedHardwareSets(updatedSets);
   };
 
@@ -43,9 +48,8 @@ function ProjectDetails(props) {
             key={hardwareSet.id}
             number={hardwareSet.number}
             status={hardwareSet.status}
-            onEnter={() => handleEnter(hardwareSet.id)}
-            onCheckIn={() => handleCheckIn(hardwareSet.id)}
-            onCheckOut={() => handleCheckOut(hardwareSet.id)}
+            onCheckIn={(qty) => handleCheckIn(hardwareSet.id, qty)}
+            onCheckOut={(qty) => handleCheckOut(hardwareSet.id, qty)}
           />
         ))}
       </ul>
@@ -53,10 +57,13 @@ function ProjectDetails(props) {
       <list>
         {props.members.map((member) => (
           <li key={member.id}>
-            <list primary={member.name} />
+            {member.name}
+            <button onClick={() => handleRemoveMember(member.id)}>Remove</button>
           </li>
         ))}
       </list>
+      <input type="text" value={newMember} onChange={(e) => setNewMember(e.target.value)} />
+      <button onClick={handleAddMember}>Add Member</button>
     </div>
   );
 }

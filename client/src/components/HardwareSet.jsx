@@ -1,12 +1,19 @@
 import React from 'react';
+import { useState } from "react"
 
 function HardwareSet(props) {
+  const [inputQty, setInputQty] = useState(0);
+
+  const handleInputChange = (event) => {
+    setInputQty(parseInt(event.target.value));
+  };
+  
   return (
     <li className="hardware-set">
       <span>HWSet{props.number}: {props.status}</span>
-      <button variant="contained" color="primary" onClick={props.onEnter}>Enter qty</button>
-      <button variant="contained" color="secondary" onClick={props.onCheckIn}>Check In</button>
-      <button variant="contained" color="secondary" onClick={props.onCheckOut}>Check Out</button>
+      <input type="number" value={inputQty} onChange={handleInputChange}></input>
+      <button variant="contained" color="secondary" onClick={() => props.onCheckIn(inputQty)}>Check In</button>
+      <button variant="contained" color="secondary" onClick={() => props.onCheckOut(inputQty)}>Check Out</button>
     </li>
   );
 }
