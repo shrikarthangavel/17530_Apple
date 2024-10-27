@@ -58,8 +58,3 @@ def login(username, password):
         print("login not found")
         return 1
 
-
-
-login("erictu", "password")
-login("test", "test")
-login("erictu", "wrongpass")

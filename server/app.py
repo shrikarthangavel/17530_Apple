@@ -4,6 +4,8 @@ import json
 import os
 import datetime
 
+import users
+
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 CORS(app)
 
@@ -23,9 +25,6 @@ def getProjectInfo(projectID):
         "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "inc" : 8
         }
-    
-    #if methods == "Post":
-
 
     return jsonify(project_data)  # Return data as JSON
 
@@ -36,6 +35,22 @@ def testIncrement():
     int += 1
 
     return jsonify(int)
+
+@app.route('/createUser', methods=['Post'])
+def createUser():
+    username = request.json['username']
+    password = request.json['password']
+
+    res = users.createUser(username, password)
+    return jsonify(res)
+
+@app.route('/loginUser', methods=['Post'])
+def loginUser():
+    username = request.json['username']
+    password = request.json['password']
+
+    res = users.login(username, password)
+    return jsonify(res)
     
 
 
