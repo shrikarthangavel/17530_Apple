@@ -5,6 +5,7 @@ import os
 import datetime
 
 import users
+import projects
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 CORS(app)
@@ -27,6 +28,18 @@ def getProjectInfo(projectID):
         }
 
     return jsonify(project_data)  # Return data as JSON
+
+@app.route('/home/getProject', methods=['Post'])
+def getProject():
+    name = request.json['name']
+    proj = projects.getProject(name)
+    print(proj)
+    return jsonify(proj)
+
+@app.route('/home/<username>')
+def getUserProjects(username):
+    projectsDB = projects.getProjects(username)
+    return jsonify(projectsDB)
 
 @app.route('/test', methods=['Post'])
 def testIncrement():

@@ -14,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/home/:username" element={<CheckoutPage />} />
         <Route path="/home/management" element={<ManagementPage />} />
         <Route path="/home/management/checkout" element={<CheckoutPage />} />
         <Route path="/home/management/checkout/:id" element={<ProjectDetails />} />

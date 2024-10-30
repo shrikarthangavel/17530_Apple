@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import HardwareSet from './HardwareSet';
 
+/*
+Structure of a Project entry
+Project = {
+  'name': name,
+  'members': [list of members by username],
+  'hardware': [list of hardware objects (each instance created by a project is its own and not shared between projects)]
+  'checkout': [list of values mapped to hardware]
+  }
+*/
+
 function ProjectDetails(props) {
-  const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardwareSets);
+  const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardware);
   const [projectMembers, setProjectMembers] = useState(props.members)
   const [newMember, setNewMember] = useState('');
 
@@ -19,22 +29,16 @@ function ProjectDetails(props) {
     console.log(projectMembers);
   };
 
-  const handleCheckIn = (hardwareSetId, qty) => {
+  const handleCheckIn = (qty) => {
     const updatedSets = updatedHardwareSets.map((set) => {
-      if (set.id === hardwareSetId) {
-        return { ...set, status: set.status + qty };
-      }
-      return set;
+      return { ...set, status: set.status + qty };
     })
     setUpdatedHardwareSets(updatedSets);
   };
 
-  const handleCheckOut = (hardwareSetId, qty) => {
+  const handleCheckOut = (qty) => {
     const updatedSets = updatedHardwareSets.map((set) => {
-      if (set.id === hardwareSetId) {
-        return { ...set, status: set.status - qty };
-      }
-      return set;
+      return { ...set, status: set.status - qty };
     })
     setUpdatedHardwareSets(updatedSets);
   };
@@ -42,21 +46,15 @@ function ProjectDetails(props) {
   return (
     <div className="project">
       <h3>{props.name}</h3>
-      <ul>
-        {updatedHardwareSets.map((hardwareSet) => (
-          <HardwareSet
-            key={hardwareSet.id}
-            number={hardwareSet.number}
-            status={hardwareSet.status}
-            onCheckIn={(qty) => handleCheckIn(hardwareSet.id, qty)}
-            onCheckOut={(qty) => handleCheckOut(hardwareSet.id, qty)}
-          />
+      <div className="hardware-container">
+        {(updatedHardwareSets).map((hw) => (
+          <HardwareSet name={hw} onCheckIn={(qty) => handleCheckIn(qty)} onCheckOut={(qty) => handleCheckOut(qty)}/>
         ))}
-      </ul>
+      </div>
       <h4>Members:</h4>
       <list>
         {props.members.map((member) => (
-          <li key={member.id}>
+          <li>
             {member.name}
             <button onClick={() => handleRemoveMember(member.id)}>Remove</button>
           </li>

@@ -10,7 +10,7 @@ function HardwareSet(props) {
   
   return (
     <li className="hardware-set">
-      <span>HWSet{props.number}: {props.status}</span>
+      <span>{props.name}</span>
       <input type="number" value={inputQty} onChange={handleInputChange}></input>
       <button variant="contained" color="secondary" onClick={() => props.onCheckIn(inputQty)}>Check In</button>
       <button variant="contained" color="secondary" onClick={() => props.onCheckOut(inputQty)}>Check Out</button>

@@ -29,6 +29,7 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
     setPassword('')
   }
 
+  //change to also encrypt username and password before passing to server
   const handleLogin = async () => {
     fetch('/loginUser', {method:'Post',
       headers:{'Content-Type': 'application/json'},
@@ -50,7 +51,8 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
   }
 
   function goToAboutPage() {
-    navigate('/home');
+    //navigate('/home');
+    navigate(`/home/${username}`);
   }
 
   const handleUsernameChange = (event) => {
