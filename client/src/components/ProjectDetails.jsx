@@ -28,18 +28,18 @@ function ProjectDetails(props) {
     console.log(projectMembers);
   };
 
-  const handleCheckIn = (qty) => {
-    const updatedSets = updatedHardwareSets.map((set) => {
-      return { ...set, status: set.status + qty };
-    })
-    setUpdatedHardwareSets(updatedSets);
+  const handleCheckIn = (hwname, qty) => {
+    const val = updatedHardwareSets[hwname]
+    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+    updatedHardwareSetsCopy[hwname] = val + qty
+    setUpdatedHardwareSets(updatedHardwareSetsCopy)
   };
 
-  const handleCheckOut = (qty) => {
-    const updatedSets = updatedHardwareSets.map((set) => {
-      return { ...set, status: set.status - qty };
-    })
-    setUpdatedHardwareSets(updatedSets);
+  const handleCheckOut = (hwname, qty) => {
+    const val = updatedHardwareSets[hwname]
+    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+    updatedHardwareSetsCopy[hwname] = val - qty
+    setUpdatedHardwareSets(updatedHardwareSetsCopy)
   };
 
   return (
@@ -47,7 +47,7 @@ function ProjectDetails(props) {
       <h3>{props.name}</h3>
       <div className="hardware-container">
           {Object.entries(updatedHardwareSets).map(([key, hw]) => (
-          <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(qty)} onCheckOut={(qty) => handleCheckOut(qty)}/>
+          <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(key, qty)} onCheckOut={(qty) => handleCheckOut(key, qty)}/>
         ))}
       </div>
       <h4>Members:</h4>

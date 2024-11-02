@@ -58,11 +58,10 @@ function CheckoutPage() {
       <h1>{username}</h1>
       <div className = "hardware-container">
       </div>
-      <Link to="/home/management/checkout/return">Return Page</Link>
       <div>
         <h1>Projects</h1>
           <div className="projects-container">
-            {Object.values(projList).map((project) => (
+            {Object.values(projects).map((project) => (
               <ProjectDetails name={project.name} hardware={project.hardware} members={project.members}/>
           ))}
           </div>
