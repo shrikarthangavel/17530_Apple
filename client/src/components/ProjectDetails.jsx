@@ -6,8 +6,7 @@ Structure of a Project entry
 Project = {
   'name': name,
   'members': [list of members by username],
-  'hardware': [list of hardware objects (each instance created by a project is its own and not shared between projects)]
-  'checkout': [list of values mapped to hardware]
+  'hardware': {"HWSET": #, ...}
   }
 */
 
@@ -47,16 +46,16 @@ function ProjectDetails(props) {
     <div className="project">
       <h3>{props.name}</h3>
       <div className="hardware-container">
-        {(updatedHardwareSets).map((hw) => (
-          <HardwareSet name={hw} onCheckIn={(qty) => handleCheckIn(qty)} onCheckOut={(qty) => handleCheckOut(qty)}/>
+          {Object.entries(updatedHardwareSets).map(([key, hw]) => (
+          <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(qty)} onCheckOut={(qty) => handleCheckOut(qty)}/>
         ))}
       </div>
       <h4>Members:</h4>
       <list>
         {props.members.map((member) => (
           <li>
-            {member.name}
-            <button onClick={() => handleRemoveMember(member.id)}>Remove</button>
+            {member}
+            <button onClick={() => handleRemoveMember(member)}>Remove</button>
           </li>
         ))}
       </list>

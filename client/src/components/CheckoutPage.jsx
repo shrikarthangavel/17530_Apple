@@ -32,31 +32,22 @@ function CheckoutPage() {
     setProjList({...projList, newProj});
   };
 
-  const [projects] = useState({   //replace to fill with project data from DB
+  const [projects] = useState({
     1: {
-      id: 1,
       name: 'Project Name 1',
-      members: [
-        { id: 1, name: 'a' },
-        { id: 2, name: 'b' },
-      ],
-      hardwareSets: [
-        { id: 1, number: 1, status: 50 },
-        { id: 2, number: 2, status: 0 },
-      ],
+      members: ["erictu", "testuser"],
+      hardware: {
+        "HWSet1": 0,
+        "HWSet2": 10
+      }
     },
     2: {
-      id: 2,
       name: 'Project Name 2',
-      members: [
-        { id: 3, name: 'x' },
-        { id: 4, name: 'y' },
-        { id: 5, name: 'z' }
-      ],
-      hardwareSets: [
-        { id: 3, number: 1, status: 20 },
-        { id: 4, number: 2, status: 30 },
-      ],
+      members: ["erictu"],
+      hardware: {
+        "HWSet1": 0,
+        "HWSet2": 1
+      }
     },
   });
   
@@ -72,7 +63,7 @@ function CheckoutPage() {
         <h1>Projects</h1>
           <div className="projects-container">
             {Object.values(projList).map((project) => (
-              <ProjectDetails name={project.name} hardware={project.hardware} members={project.members} />
+              <ProjectDetails name={project.name} hardware={project.hardware} members={project.members}/>
           ))}
           </div>
       </div>
