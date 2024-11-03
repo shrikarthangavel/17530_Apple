@@ -1,4 +1,25 @@
-.hardware-container {
-    justify-content: center;
-    align-items: center;
+.main-content {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+
+    justify-content: space-evenly;
+}
+
+.projects-section {
+
+    
+}
+
+.hardware-section {
+    display: flex;
+    flex-direction: row; /* Stacks hardware sets horizontally */
+
+    justify-content: space-between;
+    width: 30%;
+  }
+
+.hw-set1,
+.hw-set2 {
+
 }

@@ -51,25 +51,38 @@ function CheckoutPage() {
     },
   });
   
-    return (
-    <div style={{textAlign:"center"}}>
+  return (
+    <div style={{ textAlign: "center", paddingTop: "80px" }}>
       <Header />
-      <h1>W</h1>
-      <h1>{username}</h1>
-      <div className = "hardware-container">
-      </div>
-      <div>
-        <h1>Projects</h1>
+      <Link to="/home/management/checkout/return">Return Page</Link>
+      <div className="main-content">
+        <div className="projects-section">
+          <h1>Projects</h1>
           <div className="projects-container">
             {Object.values(projects).map((project) => (
-              <ProjectDetails name={project.name} hardware={project.hardware} members={project.members}/>
-          ))}
+              <ProjectDetails
+                key={project.name}
+                name={project.name}
+                hardware={project.hardware}
+                members={project.members}
+              />
+            ))}
           </div>
+        </div>
+        <div class="hardware-section">
+          <div className="hw-set1">
+            <h1>HWSet1</h1>
+            <h2>0</h2>
+          </div>
+          <div className="hw-set2">
+            <h1>HWSet2</h1>
+            <h2>0</h2>
+          </div>
+        </div>
       </div>
-      <button onClick={getProject}>TEST GET SINGULAR PROJECT</button>
-      <h1>{testProj.name} {testProj.members} {testProj.hardware} {testProj.checkout}</h1>
     </div>
-    );
+  );
+  
 }
 
 export default CheckoutPage;

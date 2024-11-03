@@ -1,4 +1,3 @@
-import pymongo
 from pymongo.mongo_client import MongoClient
 
 '''
@@ -10,7 +9,7 @@ User = {
 }
 '''
 
-uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
+uri = "mongodb+srv://andreswearden:1234@cluster0.zteylph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 #checks if user is already in db, assumes username === collection name
 def findUser(username, db):
