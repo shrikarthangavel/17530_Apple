@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import './CheckoutPage.css'
 import { Link, useParams } from 'react-router-dom';
 import ProjectDetails from './ProjectDetails';
+import HardwareComponent from './HardwareComponent';
 
 // when page is visited, backend grabs relevant dictionaries
 // from mongo and gives them to client to be displayed
@@ -71,12 +72,10 @@ function CheckoutPage() {
         </div>
         <div class="hardware-section">
           <div className="hw-set1">
-            <h1>HWSet1</h1>
-            <h2>0</h2>
+            <HardwareComponent hardwareName="HWSet1" />
           </div>
           <div className="hw-set2">
-            <h1>HWSet2</h1>
-            <h2>0</h2>
+            <HardwareComponent hardwareName="HWSet1" />
           </div>
         </div>
       </div>

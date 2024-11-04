@@ -3,13 +3,15 @@ from flask_cors import CORS
 import json
 import os
 import datetime
-
+from pymongo import MongoClient
 import users
 import projects
-
+from hardware import hardware_bp
 app = Flask(__name__, static_folder="./build", static_url_path="/")
+app.register_blueprint(hardware_bp)
 CORS(app)
-
+uri ="mongodb+srv://andreswearden:1234@cluster0.zteylph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+client = MongoClient(uri)
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
@@ -64,6 +66,7 @@ def loginUser():
 
     res = users.login(username, password)
     return jsonify(res)
+
     
 
 

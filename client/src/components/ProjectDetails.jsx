@@ -33,14 +33,40 @@ function ProjectDetails(props) {
     const updatedHardwareSetsCopy = { ...updatedHardwareSets };
     updatedHardwareSetsCopy[hwname] = val + qty
     setUpdatedHardwareSets(updatedHardwareSetsCopy)
+
   };
 
   const handleCheckOut = (hwname, qty) => {
-    const val = updatedHardwareSets[hwname]
-    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
-    updatedHardwareSetsCopy[hwname] = val - qty
-    setUpdatedHardwareSets(updatedHardwareSetsCopy)
+    const val = updatedHardwareSets[hwname];
+    const newQty = val - qty;
+  
+    // Send the update request to the server
+    fetch('/api/check-out', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: hwname,
+        quantity: qty
+      })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to update hardware count in the database");
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Update the hardware set in the front end only if the database update was successful
+        const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+        updatedHardwareSetsCopy[hwname] = newQty;
+        setUpdatedHardwareSets(updatedHardwareSetsCopy);
+      })
+      .catch(error => console.error("Error:", error));
   };
+  
+  
 
   return (
     <div className="project">

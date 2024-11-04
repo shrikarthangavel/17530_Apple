@@ -1,4 +1,3 @@
-import pymongo
 from pymongo.mongo_client import MongoClient
 
 '''
@@ -11,7 +10,7 @@ Project = {
 }
 '''
 
-uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
+uri ="mongodb+srv://andreswearden:1234@cluster0.zteylph.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 def getProject(name):
     client = MongoClient(uri)
@@ -47,7 +46,6 @@ def getUserProjects(username):
         projectCollection[p] = projectsDB[p]
 
     client.close()
-    #print(projectCollection)
 
     return projectCollection
 
