@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import './CheckoutPage.css'
 import { Link, useParams } from 'react-router-dom';
@@ -10,6 +10,17 @@ function CheckoutPage() {
   const {username} = useParams();
   const [testProj, setTestProj] = useState({name: '', members: [], hardware: [], checkout: []})
   const [projList, setProjList] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/home/getAllProjects', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'username': username})});
+      const jsonData = await response.json();
+      setProjList(jsonData)
+    }
+    fetchData();
+  }, []);
 
 
   const getProject = async () => {
@@ -31,25 +42,6 @@ function CheckoutPage() {
   const handleAddProjectToList = (newProj) => {
     setProjList({...projList, newProj});
   };
-
-  const [projects] = useState({
-    1: {
-      name: 'Project Name 1',
-      members: ["erictu", "testuser"],
-      hardware: {
-        "HWSet1": 0,
-        "HWSet2": 10
-      }
-    },
-    2: {
-      name: 'Project Name 2',
-      members: ["erictu"],
-      hardware: {
-        "HWSet1": 0,
-        "HWSet2": 1
-      }
-    },
-  });
   
     return (
     <div style={{textAlign:"center"}}>
@@ -61,7 +53,7 @@ function CheckoutPage() {
       <div>
         <h1>Projects</h1>
           <div className="projects-container">
-            {Object.values(projects).map((project) => (
+            {Object.values(projList).map((project) => (
               <ProjectDetails name={project.name} hardware={project.hardware} members={project.members}/>
           ))}
           </div>

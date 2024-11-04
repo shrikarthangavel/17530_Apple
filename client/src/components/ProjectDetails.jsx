@@ -16,16 +16,25 @@ function ProjectDetails(props) {
   const [newMember, setNewMember] = useState('');
 
   const handleAddMember = () => {
-    const newMem = { id: 999, name: newMember };
-    const updatedMembers = [...projectMembers, newMem]
-    setProjectMembers(updatedMembers);
-    setNewMember('');
-    console.log(projectMembers);
+    fetch('/project/addUser', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'username': newMember, 'project': props.name})
+    }).then(response => response.json())
+    .then(result => {
+      if (result == 0) {
+        const updatedMembers = [...projectMembers, newMember]
+        setProjectMembers(updatedMembers);
+        //more feedback, sendmsg?
+      } else {
+        //feedback that add new member failed (user does not exist, already in proj)
+      }
+      setNewMember('');
+    })
   };
 
   const handleRemoveMember = (toRemove) => {
-    setProjectMembers(projectMembers.filter((member) => member.id !== toRemove))
-    console.log(projectMembers);
+    const updatedMembers = projectMembers.filter(member => member !== toRemove);
+    setProjectMembers(updatedMembers);
   };
 
   const handleCheckIn = (hwname, qty) => {
@@ -33,6 +42,7 @@ function ProjectDetails(props) {
     const updatedHardwareSetsCopy = { ...updatedHardwareSets };
     updatedHardwareSetsCopy[hwname] = val + qty
     setUpdatedHardwareSets(updatedHardwareSetsCopy)
+
   };
 
   const handleCheckOut = (hwname, qty) => {
