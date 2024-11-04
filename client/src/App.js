@@ -15,10 +15,10 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/home/:username" element={<CheckoutPage />} />
-        <Route path="/home/management" element={<ManagementPage />} />
-        <Route path="/home/management/checkout" element={<CheckoutPage />} />
-        <Route path="/home/management/checkout/:id" element={<ProjectDetails />} />
-        <Route path="/home/management/checkout/return" element={<ReturnPage />} />
+        <Route path="/home/management" element={<ManagementPage />} />          {/* Delete */}
+        <Route path="/home/management/checkout" element={<CheckoutPage />} />   {/* Delete */}
+        <Route path="/home/management/checkout/:id" element={<ProjectDetails />} />   {/* Delete */}
+        <Route path="/home/management/checkout/return" element={<ReturnPage />} />    {/* Delete */}
       </Routes>
     </Router>
   );

@@ -51,5 +51,19 @@ def getUserProjects(username):
 
     return projectCollection
 
-getUserProjects('erictu')
-print(getProject('Project 1'))
+def createNewProject(projectName):
+    client = MongoClient(uri)
+    Project = {"name": projectName,
+               "members": ["name1", "name2"],
+               "hardware": {
+                   "HWSet1": 0,
+                   "HWSet2": 0
+               }}
+    
+    projDB = client['Projects']
+    col = projDB[projectName]
+    col.insert_one(Project)
+
+    client.close()
+
+createNewProject("Project 2")

@@ -51,7 +51,6 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
   }
 
   function goToAboutPage() {
-    //navigate('/home');
     navigate(`/home/${username}`);
   }
 
