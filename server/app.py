@@ -37,6 +37,7 @@ def createUser():
 def loginUser():
     username = request.json['username']
     password = request.json['password']
+    print(password)
 
     res = users.login(username, password)
     return jsonify(res)

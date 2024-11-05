@@ -15,9 +15,10 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
       setPassword('')
       return
     }
+    const encryptedPass = encrypt(password, 1, 1)
     fetch('/createUser', {method:'Post',
       headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({'username': username, 'password': password})
+      body: JSON.stringify({'username': username, 'password': encryptedPass})
     }).then(response => response.json())
     .then(result => {
         if (result == 0) {
@@ -31,9 +32,10 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
 
   //change to also encrypt username and password before passing to server
   const handleLogin = async () => {
+    const encryptedPass = encrypt(password, 1, 1)
     fetch('/loginUser', {method:'Post',
       headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({'username': username, 'password': password})
+      body: JSON.stringify({'username': username, 'password': encryptedPass})
     }).then(response => response.json())
     .then(result => {
       console.log(result)
@@ -52,6 +54,25 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
 
   function goToAboutPage() {
     navigate(`/home/${username}`);
+  }
+
+  function encrypt(toEncrypt, N, D) {
+    const reversedText = toEncrypt.split('').reverse().join('');
+    let encryptedText = '';
+  
+    for (let i = 0; i < reversedText.length; i++) {
+      const char = reversedText[i];
+      const ascii = char.charCodeAt(0);
+  
+      if (ascii >= 34) {
+        const newAscii = ((ascii + N * D - 34) % (127 - 34)) + 34;
+        encryptedText += String.fromCharCode(newAscii);
+      } else {
+        encryptedText += char;
+      }
+    }
+  
+    return encryptedText;
   }
 
   const handleUsernameChange = (event) => {

@@ -8,7 +8,7 @@ import ProjectDetails from './ProjectDetails';
 // from mongo and gives them to client to be displayed
 function CheckoutPage() {
   const {username} = useParams();
-  const [testProj, setTestProj] = useState({name: '', members: [], hardware: [], checkout: []})
+  const [testProj, setTestProj] = useState({name: '', members: [], hardware: []})
   const [projList, setProjList] = useState({});
 
   useEffect(() => {
@@ -33,7 +33,6 @@ function CheckoutPage() {
         "name": result.name,
         "members": result.members,
         "hardware": result.hardware,
-        "checkout": result.checkout
         })
         handleAddProjectToList(testProj)
     })

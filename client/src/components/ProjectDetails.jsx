@@ -13,12 +13,13 @@ Project = {
 function ProjectDetails(props) {
   const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardware);
   const [projectMembers, setProjectMembers] = useState(props.members)
+  const [projectName] = useState(props.name)
   const [newMember, setNewMember] = useState('');
 
   const handleAddMember = () => {
     fetch('/project/addUser', {method:'Post',
       headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({'username': newMember, 'project': props.name})
+      body: JSON.stringify({'username': newMember, 'project': projectName})
     }).then(response => response.json())
     .then(result => {
       if (result == 0) {
@@ -54,7 +55,7 @@ function ProjectDetails(props) {
 
   return (
     <div className="project">
-      <h3>{props.name}</h3>
+      <h3>{projectName}</h3>
       <div className="hardware-container">
           {Object.entries(updatedHardwareSets).map(([key, hw]) => (
           <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(key, qty)} onCheckOut={(qty) => handleCheckOut(key, qty)}/>
@@ -62,7 +63,7 @@ function ProjectDetails(props) {
       </div>
       <h4>Members:</h4>
       <list>
-        {props.members.map((member) => (
+        {projectMembers.map((member) => (
           <li>
             {member}
             <button onClick={() => handleRemoveMember(member)}>Remove</button>
