@@ -34,6 +34,38 @@ def getProjects():
     
     return
 
+def project_exists():
+    client = MongoClient(uri)
+    db = client['Projects']
+    colList = db.list_collection_names()
+    client.close()
+    
+    # Return True if the project_id exists, False otherwise
+    return project_id in colList
+    
+    
+
+
+def create_new_project(project_id, project_name, username):
+    """
+    Inserts a new project into the database.
+    """
+    # Define the new project structure
+    client = MongoClient(uri)
+    db = client['Projects']
+    new_project = {
+        'name': project_name,
+        'members': [username],  # Initial member who created the project
+        'hardware': [],
+        'checkout': []
+    }
+    
+    # Insert the new project document into the MongoDB collection
+    project_col = db[project_id]
+    project_col.insert_one(new_project)
+    client.close()
+    return {"success": "Project created successfully.", "project_id": project_id}
+
 def getUserProjects(username):
     client = MongoClient(uri)
     usersDB = client['Users']

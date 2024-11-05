@@ -5,10 +5,11 @@ import os
 import datetime
 
 import users
-import projects
+from projects import create_new_project, getProject, getUserProjects 
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 CORS(app)
+uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
 
 @app.route("/")
 def index():
@@ -64,6 +65,30 @@ def loginUser():
 
     res = users.login(username, password)
     return jsonify(res)
+
+@app.route('/create_project', methods=['POST'])
+def create_project():
+    
+    data = request.json
+    project_id = data.get('project_id')
+    project_name = data.get('project_name')
+    username = data.get('username')
+    
+    # Check if project already exists
+  
+    # Establish a MongoDB connection to check if the project already exists
+    from pymongo import MongoClient
+    client = MongoClient(uri)
+    db = client['Projects']
+
+    # Check if a collection with the given project_id exists
+    if project_id in db.list_collection_names():
+        client.close()
+        return jsonify({"error": "Project with this ID already exists."}), 400
+
+    
+    result = create_new_project(project_id, project_name, username) 
+    return jsonify(result)
     
 
 
