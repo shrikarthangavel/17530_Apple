@@ -43,7 +43,7 @@ def loginUser():
     res = users.login(username, password)
     return jsonify(res)
 
-@app.route('/create_project', methods=['POST'])
+@app.route('/create_project', methods=['POST']) #Creates project!
 def create_project():
     
     data = request.json
