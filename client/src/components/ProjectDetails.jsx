@@ -13,46 +13,57 @@ Project = {
 function ProjectDetails(props) {
   const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardware);
   const [projectMembers, setProjectMembers] = useState(props.members)
+  const [projectName] = useState(props.name)
   const [newMember, setNewMember] = useState('');
 
   const handleAddMember = () => {
-    const newMem = { id: 999, name: newMember };
-    const updatedMembers = [...projectMembers, newMem]
-    setProjectMembers(updatedMembers);
-    setNewMember('');
-    console.log(projectMembers);
+    fetch('/project/addUser', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'username': newMember, 'project': projectName})
+    }).then(response => response.json())
+    .then(result => {
+      if (result == 0) {
+        const updatedMembers = [...projectMembers, newMember]
+        setProjectMembers(updatedMembers);
+        //more feedback, sendmsg?
+      } else {
+        //feedback that add new member failed (user does not exist, already in proj)
+      }
+      setNewMember('');
+    })
   };
 
   const handleRemoveMember = (toRemove) => {
-    setProjectMembers(projectMembers.filter((member) => member.id !== toRemove))
-    console.log(projectMembers);
+    const updatedMembers = projectMembers.filter(member => member !== toRemove);
+    setProjectMembers(updatedMembers);
   };
 
-  const handleCheckIn = (qty) => {
-    const updatedSets = updatedHardwareSets.map((set) => {
-      return { ...set, status: set.status + qty };
-    })
-    setUpdatedHardwareSets(updatedSets);
+  const handleCheckIn = (hwname, qty) => {
+    const val = updatedHardwareSets[hwname]
+    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+    updatedHardwareSetsCopy[hwname] = val + qty
+    setUpdatedHardwareSets(updatedHardwareSetsCopy)
+
   };
 
-  const handleCheckOut = (qty) => {
-    const updatedSets = updatedHardwareSets.map((set) => {
-      return { ...set, status: set.status - qty };
-    })
-    setUpdatedHardwareSets(updatedSets);
+  const handleCheckOut = (hwname, qty) => {
+    const val = updatedHardwareSets[hwname]
+    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+    updatedHardwareSetsCopy[hwname] = val - qty
+    setUpdatedHardwareSets(updatedHardwareSetsCopy)
   };
 
   return (
     <div className="project">
-      <h3>{props.name}</h3>
+      <h3>{projectName}</h3>
       <div className="hardware-container">
           {Object.entries(updatedHardwareSets).map(([key, hw]) => (
-          <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(qty)} onCheckOut={(qty) => handleCheckOut(qty)}/>
+          <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(key, qty)} onCheckOut={(qty) => handleCheckOut(key, qty)}/>
         ))}
       </div>
       <h4>Members:</h4>
       <list>
-        {props.members.map((member) => (
+        {projectMembers.map((member) => (
           <li>
             {member}
             <button onClick={() => handleRemoveMember(member)}>Remove</button>

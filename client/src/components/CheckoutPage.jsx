@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import './CheckoutPage.css'
 import { Link, useParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ import ProjectDetails from './ProjectDetails';
 // from mongo and gives them to client to be displayed
 function CheckoutPage() {
   const {username} = useParams();
-  const [testProj, setTestProj] = useState({name: '', members: [], hardware: [], checkout: []})
+  const [testProj, setTestProj] = useState({name: '', members: [], hardware: []})
   const [projList, setProjList] = useState({});
   //
   const [projectId, setProjectId] = useState("");  // Holds the project ID input
@@ -29,6 +29,18 @@ function CheckoutPage() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/home/getAllProjects', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'username': username})});
+      const jsonData = await response.json();
+      setProjList(jsonData)
+    }
+    fetchData();
+  }, []);
+
+
   const getProject = async () => {
     fetch('/home/getProject', {method:'Post',
       headers:{'Content-Type': 'application/json'},
@@ -39,7 +51,6 @@ function CheckoutPage() {
         "name": result.name,
         "members": result.members,
         "hardware": result.hardware,
-        "checkout": result.checkout
         })
         handleAddProjectToList(testProj)
     })
@@ -48,25 +59,6 @@ function CheckoutPage() {
   const handleAddProjectToList = (newProj) => {
     setProjList({...projList, newProj});
   };
-
-  const [projects] = useState({
-    1: {
-      name: 'Project Name 1',
-      members: ["erictu", "testuser"],
-      hardware: {
-        "HWSet1": 0,
-        "HWSet2": 10
-      }
-    },
-    2: {
-      name: 'Project Name 2',
-      members: ["erictu"],
-      hardware: {
-        "HWSet1": 0,
-        "HWSet2": 1
-      }
-    },
-  });
   
   return (
     <div style={{ textAlign: "center" }}>
