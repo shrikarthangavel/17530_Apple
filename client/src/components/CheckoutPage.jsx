@@ -11,7 +11,6 @@ function CheckoutPage() {
   const [testProj, setTestProj] = useState({name: '', members: [], hardware: []})
   const [projList, setProjList] = useState({});
   //
-  const [projectId, setProjectId] = useState("");  // Holds the project ID input
   const [projectName, setProjectName] = useState("");  // Holds the project name input
   const [message, setMessage] = useState("");
 
@@ -20,12 +19,32 @@ function CheckoutPage() {
       const response = await fetch('/create_project', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_id: projectId, project_name: projectName, username })
+        body: JSON.stringify({ project_name: projectName, username: username })
       });
       const result = await response.json();
       setMessage(result.success || result.error);
+      setProjectName("")
     } catch (error) {
       setMessage("Error creating project");
+      setProjectName("")
+    }
+  };
+
+  const joinProject = async () => {
+    try {
+      const response = await fetch('/project/addUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({'username': username, 'project': projectName})
+      });
+      const result = await response.json();
+      if (result == 2) {setMessage("Project does not exist")}
+      else if (result == 1) {setMessage("User already in project")}
+      else {setMessage("Success")}
+      setProjectName("")
+    } catch (error) {
+      setMessage("Error joining project");
+      setProjectName("")
     }
   };
 
@@ -38,7 +57,7 @@ function CheckoutPage() {
       setProjList(jsonData)
     }
     fetchData();
-  }, []);
+  });
 
 
   const getProject = async () => {
@@ -63,36 +82,27 @@ function CheckoutPage() {
   return (
     <div style={{ textAlign: "center" }}>
       <Header />
+      <h1>Spacer text, do not delete</h1>
       <h1>Welcome, {username}</h1>
       {/* Project Creation Inputs and Button */}
       <div>
-        <input
-          type="text"
-          placeholder="Project ID"
-          value={projectId}
-          onChange={(e) => setProjectId(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Project Name"
-          value={projectName}
-          onChange={(e) => setProjectName(e.target.value)}
-        />
+        <input type="text" placeholder="Project Name" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
         <button onClick={createProject}>Create New Project</button>
-        <p>{message}</p>  {/* Display success or error message */}
       </div>
-      
-      <div className="hardware-container"></div>
-      
-      <Link to="/home/management/checkout/return">Return Page</Link>
+
+      {/* Project Join Inputs and Button */}
+      <div>
+        <input type="text" placeholder="Project Name" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
+        <button onClick={joinProject}>Join Project</button>
+      </div>
+      <p>{message}</p> {/* Display success or error message */}
       
       {/* Project List */}
       <div>
         <h1>Projects</h1>
         <div className="projects-container">
-          {Object.values(projList).map((project, index) => (
+          {Object.values(projList).map((project) => (
             <ProjectDetails
-              key={index}
               name={project.name}
               hardware={project.hardware}
               members={project.members}
@@ -100,10 +110,6 @@ function CheckoutPage() {
           ))}
         </div>
       </div>
-      
-      {/* Button to Test Get Singular Project */}
-      <button onClick={getProject}>TEST GET SINGULAR PROJECT</button>
-      <h1>{testProj.name} {testProj.members.join(", ")} {JSON.stringify(testProj.hardware)} {JSON.stringify(testProj.checkout)}</h1>
     </div>
   );
 }
