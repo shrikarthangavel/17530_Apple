@@ -32,39 +32,36 @@ def getProjectsList():
 
     client.close()
     
-    return
+    return  
+    
+def create_new_project(project_name, username):
 
-def project_exists():
+
     client = MongoClient(uri)
-    db = client['Projects']
-    colList = db.list_collection_names()
-    client.close()
-    
-    # Return True if the project_id exists, False otherwise
-    return project_id in colList
-    
-    
-
-
-def create_new_project(project_id, project_name, username):
+    """
+    Creates a dict of all HW currently available
+    """
+    db = client['Hardware']
+    hwColList = db.list_collection_names()
+    HWDict = {}
+    for hw in hwColList:
+        HWDict[hw] = 0
     """
     Inserts a new project into the database.
     """
     # Define the new project structure
-    client = MongoClient(uri)
-    db = client['Projects']
     new_project = {
         'name': project_name,
         'members': [username],  # Initial member who created the project
-        'hardware': [],
-        'checkout': []
+        'hardware': HWDict,
     }
     
     # Insert the new project document into the MongoDB collection
-    project_col = db[project_id]
+    db = client['Projects']
+    project_col = db[project_name]
     project_col.insert_one(new_project)
     client.close()
-    return {"success": "Project created successfully.", "project_id": project_id}
+    return {"success": "Project created successfully.", "project_name": project_name}
 
 def getUserProjects(username):
     client = MongoClient(uri)
@@ -85,24 +82,7 @@ def getUserProjects(username):
     return returnList
 
 
-def createNewProject(projectName):
-    client = MongoClient(uri)
-    hwDB = client['Hardware']
-    hwColList = hwDB.list_collection_names()
-    tempDict = {}
-    for hw in hwColList:
-        tempDict[hw] = 0
-
-    Project = {"name": projectName,
-               "members": [],
-               "hardware": tempDict}
-    
-    projDB = client['Projects']
-    col = projDB[projectName]
-    col.insert_one(Project)
-
-    client.close()
-
+#adds new user to project's member list
 #returns 1 if user is already in project
 #returns 0 otherwise
 def addNewUser(username, project):
@@ -125,3 +105,4 @@ def addNewUser(username, project):
 
 #print(addNewUser("erictu", "Project 1"))
 #print(getUserProjects('erictu'))
+create_new_project("test", "erictu")

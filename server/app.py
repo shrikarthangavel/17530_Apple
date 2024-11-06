@@ -3,7 +3,7 @@ from flask_cors import CORS
 import json
 
 import users
-from projects import create_new_project, getProject, getUserProjects 
+import projects
 
 app = Flask(__name__, static_folder="./build", static_url_path="/")
 CORS(app)
@@ -47,24 +47,15 @@ def loginUser():
 def create_project():
     
     data = request.json
-    project_id = data.get('project_id')
     project_name = data.get('project_name')
     username = data.get('username')
     
     # Check if project already exists
-  
-    # Establish a MongoDB connection to check if the project already exists
-    from pymongo import MongoClient
-    client = MongoClient(uri)
-    db = client['Projects']
-
-    # Check if a collection with the given project_id exists
-    if project_id in db.list_collection_names():
-        client.close()
+    if projects.getProject(project_name):
         return jsonify({"error": "Project with this ID already exists."}), 400
-
     
-    result = create_new_project(project_id, project_name, username) 
+    result = projects.create_new_project(project_name, username) 
+    users.joinProject(project_name, username)
     return jsonify(result)
     
 

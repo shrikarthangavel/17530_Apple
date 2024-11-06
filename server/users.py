@@ -58,3 +58,18 @@ def login(username, password):
         print("login not found")
         return 1
 
+def joinProject(projectName, username):
+    client = MongoClient(uri)
+    db = client["Users"]
+    col = db[username]
+    user = col.find_one({'username': username})
+    projectList = user['projects']
+    projectList.append(projectName)
+    user = {"username": user['username'],
+            "password": user['password'],
+            "projects": projectList}
+    col.replace_one({}, user)
+    client.close()
+
+    return
+
