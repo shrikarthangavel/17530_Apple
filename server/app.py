@@ -64,6 +64,11 @@ def create_project():
 def addUser():
     newUsername = request.json['username']
     projectName = request.json['project']
+
+    if not projects.getProject(projectName):
+        return jsonify(2)
+
+    users.joinProject(projectName, newUsername)
     res = projects.addNewUser(newUsername, projectName)
     return jsonify(res)
     

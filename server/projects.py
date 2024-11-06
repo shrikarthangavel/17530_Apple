@@ -105,4 +105,3 @@ def addNewUser(username, project):
 
 #print(addNewUser("erictu", "Project 1"))
 #print(getUserProjects('erictu'))
-create_new_project("test", "erictu")
