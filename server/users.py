@@ -13,19 +13,25 @@ User = {
 uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
 
 #checks if user is already in db, assumes username === collection name
-def findUser(username, db):
+def findUser(username):
+    client = MongoClient(uri)
+    db = client["Users"]
     colList = db.list_collection_names()
     if username in colList:
+        client.close()
         return True
+    client.close()
     return False
 
 #return 0 if success
 #return 1 if username already exists
 def createUser(username, password):
+    userExists = findUser(username)
+
     client = MongoClient(uri)
     db = client["Users"]
 
-    if findUser(username, db) == False:
+    if userExists == False:
         newUser = {'username': username, 'password': password, 'projects': []}
         col = db[username]
         col.insert_one(newUser)
@@ -40,10 +46,11 @@ def createUser(username, password):
 #return 0 if success
 #return 1 if login does not exist
 def login(username, password):
+    userExists = findUser(username)
     client = MongoClient(uri)
     db = client["Users"]
 
-    if not findUser(username, db):
+    if not userExists:
         print("login not found")
         client.close()
         return 1
@@ -73,3 +80,17 @@ def joinProject(projectName, username):
 
     return
 
+def leaveProject(project, username):
+    client = MongoClient(uri)
+    db = client["Users"]
+    col = db[username]
+    user = col.find_one({'username': username})
+    projectList = user['projects']
+    projectList.remove(project)
+    user = {"username": user['username'],
+            "password": user['password'],
+            "projects": projectList}
+    col.replace_one({}, user)
+    client.close()
+
+    return

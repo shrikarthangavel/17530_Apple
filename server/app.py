@@ -65,13 +65,24 @@ def addUser():
     newUsername = request.json['username']
     projectName = request.json['project']
 
+    if not users.findUser(newUsername):
+        return jsonify(3)
     if not projects.getProject(projectName):
         return jsonify(2)
 
-    users.joinProject(projectName, newUsername)
     res = projects.addNewUser(newUsername, projectName)
     return jsonify(res)
-    
+
+#should only be called when user and project exist
+@app.route('/project/removeUser', methods=['Post'])
+def removeUser():
+    toRemove = request.json['username']
+    projectName = request.json['project']
+
+    projects.removeUser(toRemove, projectName)
+    users.leaveProject(projectName, toRemove)
+
+    return jsonify(0)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

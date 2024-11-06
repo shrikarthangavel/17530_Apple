@@ -1,6 +1,8 @@
 import pymongo
 from pymongo.mongo_client import MongoClient
 
+import users
+
 '''
 Structure of Project entry:
 Project = {
@@ -96,6 +98,21 @@ def addNewUser(username, project):
             return 1
 
     membersList.append(username)
+    proj = {"name": proj['name'],
+            "members": membersList,
+            "hardware": proj['hardware']}
+    col.replace_one({}, proj)
+    client.close()
+    users.joinProject(project, username)
+    return 0
+
+def removeUser(username, project):
+    client = MongoClient(uri)
+    projDB = client['Projects']
+    col = projDB[project]
+    proj = col.find_one({'name': project})
+    membersList = proj['members']
+    membersList.remove(username)
     proj = {"name": proj['name'],
             "members": membersList,
             "hardware": proj['hardware']}

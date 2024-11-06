@@ -8,7 +8,6 @@ import ProjectDetails from './ProjectDetails';
 // from mongo and gives them to client to be displayed
 function CheckoutPage() {
   const {username} = useParams();
-  const [testProj, setTestProj] = useState({name: '', members: [], hardware: []})
   const [projList, setProjList] = useState({});
   //
   const [projectName, setProjectName] = useState("");  // Holds the project name input
@@ -58,26 +57,6 @@ function CheckoutPage() {
     }
     fetchData();
   });
-
-
-  const getProject = async () => {
-    fetch('/home/getProject', {method:'Post',
-      headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({'name': 'Project 1'}) //replace with proper project name(s) or username to get all?
-    }).then(response => response.json())
-    .then(result => {
-      setTestProj({
-        "name": result.name,
-        "members": result.members,
-        "hardware": result.hardware,
-        })
-        handleAddProjectToList(testProj)
-    })
-  }
-
-  const handleAddProjectToList = (newProj) => {
-    setProjList({...projList, newProj});
-  };
   
   return (
     <div style={{ textAlign: "center" }}>
@@ -106,6 +85,7 @@ function CheckoutPage() {
               name={project.name}
               hardware={project.hardware}
               members={project.members}
+              changeMessage={(msg) => setMessage(msg)}
             />
           ))}
         </div>
