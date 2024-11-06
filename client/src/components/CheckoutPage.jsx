@@ -75,7 +75,7 @@ function CheckoutPage() {
             <HardwareComponent hardwareName="HWSet1" />
           </div>
           <div className="hw-set2">
-            <HardwareComponent hardwareName="HWSet1" />
+            <HardwareComponent hardwareName="HWSet2" />
           </div>
         </div>
       </div>

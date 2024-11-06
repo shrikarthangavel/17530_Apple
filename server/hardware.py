@@ -10,8 +10,8 @@ client = MongoClient(uri)
 db = client["HardwareSet"]
 HWSet1 = "HWSet1"
 HWSet2 = "HWSet2"
-def createDB(hw_set_name):
-    collection = db[HWSet1]
+def create_hw_db(hw_set_name):
+    collection = db[hw_set_name]
     initial_data = {
         "name": hw_set_name,
         "capacity": 100,  # Total capacity of the hardware set
@@ -39,13 +39,35 @@ def check_out():
 
 @hardware_bp.route('/hardware/<name>/available', methods=['GET'])
 def get_available(name):
-    createDB(HWSet1)  # Ensure database is initialized
-    collection = db[HWSet1]
-    hardware_set = collection.find_one({"name": name})
-    if hardware_set:
-        return jsonify({"available": hardware_set["available"]}), 200
+    # Ensure both hardware databases are initialized
+    create_hw_db(HWSet1)
+    create_hw_db(HWSet2)
+    
+    # Access both hardware collections
+    collection1 = db[HWSet1]
+    collection2 = db[HWSet2]
+    
+    # Find the hardware set in both HWSet1 and HWSet2
+    hardware_set1 = collection1.find_one({"name": name})
+    hardware_set2 = collection2.find_one({"name": name})
+    
+    # Prepare response data for both sets
+    response_data = None
+    
+    if hardware_set1:
+        response_data = {"available": hardware_set1["available"]}
+    else:
+        response_data = {"available": hardware_set2["available"]} if hardware_set2 else None
+
+
+    
+    
+    # Return the response with status 200 if either set is found, otherwise 404
+    if hardware_set1 or hardware_set2:
+        return jsonify(response_data), 200
     else:
         return jsonify({"error": "Hardware set not found"}), 404
+
 
 def getCapacity(name):
     pass
