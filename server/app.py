@@ -17,7 +17,7 @@ def index():
 def getProject():
     name = request.json['name']
     proj = projects.getProject(name)
-    print(proj)
+
     return jsonify(proj)
 
 @app.route('/home/getAllProjects', methods=['Post'])
@@ -38,7 +38,6 @@ def createUser():
 def loginUser():
     username = request.json['username']
     password = request.json['password']
-    print(password)
 
     res = users.login(username, password)
     return jsonify(res)
@@ -49,16 +48,20 @@ def create_project():
     data = request.json
     project_name = data.get('project_name')
     username = data.get('username')
+    identifier = data.get('identifier')
+    description = data.get('description')
     
     # Check if project already exists
     if projects.getProject(project_name):
+        return jsonify({"error": "Project with this Name already exists."}), 400
+    
+    if projects.findIdentifier(identifier):
         return jsonify({"error": "Project with this ID already exists."}), 400
     
-    result = projects.create_new_project(project_name, username) 
+    result = projects.create_new_project(project_name, username, description, identifier) 
     users.joinProject(project_name, username)
     return jsonify(result)
     
-
 
 @app.route('/project/addUser', methods=['Post'])
 def addUser():

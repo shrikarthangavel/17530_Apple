@@ -3,17 +3,22 @@ import HardwareSet from './HardwareSet';
 
 /*
 Structure of a Project entry
-Project = {
-  'name': name,
-  'members': [list of members by username],
-  'hardware': {"HWSET": #, ...}
-  }
+ProjectName = {
+    'name': name,
+    'members': [member1, member2, ...],
+    'hardware': {"hardwareset1" : #, 
+                "hardwareset2": #, ...},
+    'description': "string description",
+    'identifier': "unique string identifier"
+}
 */
 
 function ProjectDetails(props) {
   const [updatedHardwareSets, setUpdatedHardwareSets] = useState(props.hardware);
-  const [projectMembers, setProjectMembers] = useState(props.members)
-  const [projectName] = useState(props.name)
+  const [projectMembers, setProjectMembers] = useState(props.members);
+  const [projectDescription] = useState(props.description);
+  const [projectIdentifer] = useState(props.identifier);
+  const [projectName] = useState(props.name);
   const [newMember, setNewMember] = useState('');
 
   const handleAddMember = () => {
@@ -67,7 +72,9 @@ function ProjectDetails(props) {
 
   return (
     <div className="project">
-      <h3>{projectName}</h3>
+      <h3>Name: {projectName}</h3>
+      <h4>Identifier: {projectIdentifer}</h4>
+      <p>Description: {projectDescription}</p>
       <div className="hardware-container">
           {Object.entries(updatedHardwareSets).map(([key, hw]) => (
           <HardwareSet name={key} val={hw} onCheckIn={(qty) => handleCheckIn(key, qty)} onCheckOut={(qty) => handleCheckOut(key, qty)}/>

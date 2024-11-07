@@ -2,14 +2,17 @@ import pymongo
 from pymongo.mongo_client import MongoClient
 
 import users
+import hardware
 
 '''
 Structure of Project entry:
-Project = {
+ProjectName = {
     'name': name,
     'members': [member1, member2, ...],
-    'hardware': [hardwareset1, hardwareset2, ...]
-    'checkedout': [#, #, ...]
+    'hardware': {"hardwareset1" : #, 
+                "hardwareset2": #, ...},
+    'description': "string description",
+    'identifier': "unique string identifier"
 }
 '''
 
@@ -25,6 +28,21 @@ def getProject(name):
 
     return doc
 
+def findIdentifier(identifier):
+    client = MongoClient(uri)
+    db = client['Projects']
+    collectionsList = db.list_collection_names()
+
+    for collectionName in collectionsList:
+        col = db[collectionName]
+        doc = col.find_one({'identifier': identifier})
+        if doc:
+            client.close()
+            return True
+        
+    client.close()
+    return False
+
 def getProjectsList():
     client = MongoClient(uri)
     db = client['Projects']
@@ -36,7 +54,7 @@ def getProjectsList():
     
     return  
     
-def create_new_project(project_name, username):
+def create_new_project(project_name, username, description, identifier): #added description and identifier fields
 
 
     client = MongoClient(uri)
@@ -56,6 +74,8 @@ def create_new_project(project_name, username):
         'name': project_name,
         'members': [username],  # Initial member who created the project
         'hardware': HWDict,
+        'description': description,
+        'identifier': identifier
     }
     
     # Insert the new project document into the MongoDB collection
@@ -95,13 +115,12 @@ def addNewUser(username, project):
     membersList = proj['members']
     for name in membersList:
         if name == username:
-            return 1
+            return 1      #user already in project
 
-    membersList.append(username)
-    proj = {"name": proj['name'],
-            "members": membersList,
-            "hardware": proj['hardware']}
-    col.replace_one({}, proj)
+    col.update_one(
+        {'name': project},
+        {'$addToSet': {'members': username}}
+    )
     client.close()
     users.joinProject(project, username)
     return 0
@@ -110,15 +129,35 @@ def removeUser(username, project):
     client = MongoClient(uri)
     projDB = client['Projects']
     col = projDB[project]
+    col.update_one(
+        {'name': project},
+        {'$pull': {'members': username}}
+    )
+
+    #if no users left in project, call disbandProject()
     proj = col.find_one({'name': project})
     membersList = proj['members']
-    membersList.remove(username)
-    proj = {"name": proj['name'],
-            "members": membersList,
-            "hardware": proj['hardware']}
-    col.replace_one({}, proj)
+    client.close()
+    if not membersList:
+        disbandProject(project)
+
+    return 0
+
+#fully executes if no members are left in the project to return all hardware
+def disbandProject(project):
+    client = MongoClient(uri)
+    projDB = client['Projects']
+    col = projDB[project]
+    proj = col.find_one({'name': project})
+    hardwareDict = proj['hardware']
+
+    for hwName, qty in hardwareDict.items():
+        if qty > 0:
+            hardware.checkIn(hwName, qty, project)
+
+    col.drop()
     client.close()
     return 0
 
-#print(addNewUser("erictu", "Project 1"))
-#print(getUserProjects('erictu'))
+
+#print(findIdentifier("none"))

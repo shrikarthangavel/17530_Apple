@@ -69,13 +69,10 @@ def joinProject(projectName, username):
     client = MongoClient(uri)
     db = client["Users"]
     col = db[username]
-    user = col.find_one({'username': username})
-    projectList = user['projects']
-    projectList.append(projectName)
-    user = {"username": user['username'],
-            "password": user['password'],
-            "projects": projectList}
-    col.replace_one({}, user)
+    col.update_one(
+        {'username': username},
+        {'$addToSet': {'projects': projectName}}
+    )
     client.close()
 
     return
@@ -84,13 +81,10 @@ def leaveProject(project, username):
     client = MongoClient(uri)
     db = client["Users"]
     col = db[username]
-    user = col.find_one({'username': username})
-    projectList = user['projects']
-    projectList.remove(project)
-    user = {"username": user['username'],
-            "password": user['password'],
-            "projects": projectList}
-    col.replace_one({}, user)
+    col.update_one(
+        {'username': username},
+        {'$pull': {'projects': project}}
+    )
     client.close()
 
     return

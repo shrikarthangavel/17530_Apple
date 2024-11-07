@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import './CheckoutPage.css'
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ProjectDetails from './ProjectDetails';
 
 // when page is visited, backend grabs relevant dictionaries
@@ -10,22 +10,31 @@ function CheckoutPage() {
   const {username} = useParams();
   const [projList, setProjList] = useState({});
   //
-  const [projectName, setProjectName] = useState("");  // Holds the project name input
+  const [projectIdentifer, setProjectIdentifer] = useState("");
+  const [projectDescription, setProjectDescription] = useState("");
+  const [projectName, setProjectName] = useState("");  // Holds the project name input for join
+  const [projectNameCreate, setProjectNameCreate] = useState(""); //Holds project name for creating
   const [message, setMessage] = useState("");
 
   const createProject = async () => {
     try {
+      if (projectIdentifer == "" || projectNameCreate == "") {
+        setMessage("Project identifier and name cannot be empty")
+        return
+      }
       const response = await fetch('/create_project', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ project_name: projectName, username: username })
+        body: JSON.stringify({ project_name: projectNameCreate, username: username, description: projectDescription, identifier: projectIdentifer })
       });
       const result = await response.json();
       setMessage(result.success || result.error);
-      setProjectName("")
     } catch (error) {
       setMessage("Error creating project");
-      setProjectName("")
+    } finally {
+      setProjectNameCreate("")
+      setProjectIdentifer("")
+      setProjectDescription("")
     }
   };
 
@@ -40,9 +49,9 @@ function CheckoutPage() {
       if (result == 2) {setMessage("Project does not exist")}
       else if (result == 1) {setMessage("User already in project")}
       else {setMessage("Success")}
-      setProjectName("")
     } catch (error) {
       setMessage("Error joining project");
+    } finally {
       setProjectName("")
     }
   };
@@ -65,7 +74,9 @@ function CheckoutPage() {
       <h1>Welcome, {username}</h1>
       {/* Project Creation Inputs and Button */}
       <div>
-        <input type="text" placeholder="Project Name" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
+        <input type="text" placeholder="Project ID" value={projectIdentifer} onChange={(e) => setProjectIdentifer(e.target.value)}/>
+        <input type="text" placeholder="Project Name" value={projectNameCreate} onChange={(e) => setProjectNameCreate(e.target.value)}/>
+        <input type="text" placeholder="Project Description" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)}/>
         <button onClick={createProject}>Create New Project</button>
       </div>
 
@@ -85,6 +96,8 @@ function CheckoutPage() {
               name={project.name}
               hardware={project.hardware}
               members={project.members}
+              description={project.description}
+              identifier={project.identifier}
               changeMessage={(msg) => setMessage(msg)}
             />
           ))}
