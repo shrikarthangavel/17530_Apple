@@ -5,14 +5,14 @@ import json
 import users
 import projects
 
-app = Flask(__name__, static_folder="./build", static_url_path="/")
+app = Flask(__name__, static_folder="client/build", static_url_path="/")
 CORS(app)
 uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
 
 @app.route("/",defaults = {"path" : ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists(app.static_folder+ '/' +path):
+    if path != "" and os.path.exists(app.static_folder+ '/' +path):  # Heroku ?
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
