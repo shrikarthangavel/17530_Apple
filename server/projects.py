@@ -1,8 +1,8 @@
 import pymongo
 from pymongo.mongo_client import MongoClient
 
-import users
-import hardware
+from . import users
+from . import hardware
 
 '''
 Structure of Project entry:
