@@ -103,6 +103,19 @@ def getUserProjects(username):
 
     return returnList
 
+def getProjectName(identifier):
+    client = MongoClient(uri)
+    projDB = client['Projects']
+    collectionsList = projDB.list_collection_names()
+
+    for collectionName in collectionsList:
+        col = projDB[collectionName]
+        doc = col.find_one({'identifier': identifier})
+        if doc:
+            return doc['name']
+
+    return None
+
 
 #adds new user to project's member list
 #returns 1 if user is already in project
@@ -160,4 +173,4 @@ def disbandProject(project):
     return 0
 
 
-#print(findIdentifier("none"))
+print(getProjectName("proj1"))

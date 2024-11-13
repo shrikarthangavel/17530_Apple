@@ -75,12 +75,14 @@ def create_project():
 @app.route('/project/addUser', methods=['Post'])
 def addUser():
     newUsername = request.json['username']
-    projectName = request.json['project']
+    projectIdentifier = request.json['identifier']
 
     if not users.findUser(newUsername):
         return jsonify(3)
-    if not projects.getProject(projectName):
+    if not projects.findIdentifier(projectIdentifier):
         return jsonify(2)
+    
+    projectName = projects.getProjectName(projectIdentifier)
 
     res = projects.addNewUser(newUsername, projectName)
     return jsonify(res)
