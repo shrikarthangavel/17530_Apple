@@ -88,10 +88,10 @@ def checkOut(name, qty, projectname):
                     resultx = projCollection.update_one({}, {"$set": {f"hardware.{name}": currentAmount + qty}})
                 else:
                     print("Unable to find the specified project")
-                return newAvailability
+                return 0
             else:
                 print(f"Not enough items available. Only {currentlyAvailable} items available.")
-                return None
+                return 1
         else:
             print("Availability field not found in Hardware collection.")
             return None
@@ -126,10 +126,10 @@ def checkIn(name, qty, projectname):
                 resultx = projCollection.update_one({}, {"$set": {f"hardware.{name}": currentAmount - qty}})
                 result = collection.update_one({}, {"$set": {"availability": newAvailability}})
                 print(f"Checked in {qty} items. You now have {currentAmount - qty} items.")
-                return newAvailability
+                return 0
             else:
                 print(f"You do not have enough items. Only {currentAmount} items in your project.")
-                return None
+                return 1
         else:
             print("Availability or project field not found in Hardware collection.")
             return None

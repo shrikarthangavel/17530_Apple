@@ -3,6 +3,7 @@ import Header from './Header';
 import './CheckoutPage.css'
 import { useParams } from 'react-router-dom';
 import ProjectDetails from './ProjectDetails';
+import HardwareComponent from './HardwareComponent';
 
 // when page is visited, backend grabs relevant dictionaries
 // from mongo and gives them to client to be displayed
@@ -12,7 +13,7 @@ function CheckoutPage() {
   //
   const [projectIdentifer, setProjectIdentifer] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
-  const [projectName, setProjectName] = useState("");  // Holds the project name input for join
+  const [projectIdentifierJoin, setProjectIdentifierJoin] = useState("");  // Holds the project name input for join
   const [projectNameCreate, setProjectNameCreate] = useState(""); //Holds project name for creating
   const [message, setMessage] = useState("");
 
@@ -43,7 +44,7 @@ function CheckoutPage() {
       const response = await fetch('/project/addUser', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({'username': username, 'project': projectName})
+        body: JSON.stringify({'username': username, 'identifier': projectIdentifierJoin})
       });
       const result = await response.json();
       if (result == 2) {setMessage("Project does not exist")}
@@ -52,7 +53,7 @@ function CheckoutPage() {
     } catch (error) {
       setMessage("Error joining project");
     } finally {
-      setProjectName("")
+      setProjectIdentifierJoin("")
     }
   };
 
@@ -82,7 +83,7 @@ function CheckoutPage() {
 
       {/* Project Join Inputs and Button */}
       <div>
-        <input type="text" placeholder="Project Name" value={projectName} onChange={(e) => setProjectName(e.target.value)}/>
+        <input type="text" placeholder="Project Name" value={projectIdentifierJoin} onChange={(e) => setProjectIdentifierJoin(e.target.value)}/>
         <button onClick={joinProject}>Join Project</button>
       </div>
       <p>{message}</p> {/* Display success or error message */}
@@ -101,6 +102,15 @@ function CheckoutPage() {
               changeMessage={(msg) => setMessage(msg)}
             />
           ))}
+        </div>
+      </div>
+      {/* Hardware Availability */}
+      <div class="hardware-section">
+        <div className="hw-set1">
+          <HardwareComponent hardwareName="Hammers" />
+          <HardwareComponent hardwareName="Nails" />
+          <HardwareComponent hardwareName="Screwdrivers" />
+          <HardwareComponent hardwareName="Screws" />
         </div>
       </div>
     </div>

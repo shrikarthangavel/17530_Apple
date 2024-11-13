@@ -4,6 +4,7 @@ import json
 
 import users
 import projects
+import hardware
 
 app = Flask(__name__, static_folder="client/build", static_url_path="/")
 CORS(app)
@@ -74,12 +75,14 @@ def create_project():
 @app.route('/project/addUser', methods=['Post'])
 def addUser():
     newUsername = request.json['username']
-    projectName = request.json['project']
+    projectIdentifier = request.json['identifier']
 
     if not users.findUser(newUsername):
         return jsonify(3)
-    if not projects.getProject(projectName):
+    if not projects.findIdentifier(projectIdentifier):
         return jsonify(2)
+    
+    projectName = projects.getProjectName(projectIdentifier)
 
     res = projects.addNewUser(newUsername, projectName)
     return jsonify(res)
@@ -94,6 +97,29 @@ def removeUser():
     users.leaveProject(projectName, toRemove)
 
     return jsonify(0)
+
+@app.route('/hardware/<name>/available')
+def getAvailable(name):
+    qty = hardware.getAvailible(name)
+    return jsonify(qty)
+
+@app.route('/project/checkIn', methods=['Post'])
+def checkIn():
+    project = request.json['project']
+    hardwareName = request.json['hardware']
+    qty = request.json['qty']
+
+    result = hardware.checkIn(hardwareName, qty, project)
+    return jsonify(result)
+
+@app.route('/project/checkOut', methods=['Post'])
+def checkOut():
+    project = request.json['project']
+    hardwareName = request.json['hardware']
+    qty = request.json['qty']
+
+    result = hardware.checkOut(hardwareName, qty, project)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
