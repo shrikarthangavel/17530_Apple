@@ -140,3 +140,10 @@ def checkIn(name, qty, projectname):
     finally:
         client.close()
 
+def getHardwareList():
+    uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
+    client = MongoClient(uri)
+    db = client["Hardware"]
+    hardwareList = db.list_collection_names()
+    client.close()
+    return hardwareList

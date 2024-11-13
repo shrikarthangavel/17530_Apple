@@ -39,7 +39,7 @@ function ProjectDetails(props) {
     })
   };
 
-  const handleRemoveMember = (toRemove) => { //add handle with mongo
+  const handleRemoveMember = (toRemove) => {
     fetch('/project/removeUser', {method:'Post',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify({'username': toRemove, 'project': projectName})
@@ -55,7 +55,7 @@ function ProjectDetails(props) {
     })
   };
 
-  const handleCheckIn = (hwname, qty) => {  //add handle with mongo
+  const handleCheckIn = (hwname, qty) => { 
     fetch('/project/checkIn', {method:'Post',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify({'project': projectName, 'hardware': hwname, 'qty': qty})
@@ -73,7 +73,7 @@ function ProjectDetails(props) {
     })
   };
 
-  const handleCheckOut = (hwname, qty) => { //add handle with mongo
+  const handleCheckOut = (hwname, qty) => {
     fetch('/project/checkOut', {method:'Post',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify({'project': projectName, 'hardware': hwname, 'qty': qty})

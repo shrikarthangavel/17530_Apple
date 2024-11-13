@@ -10,6 +10,7 @@ import HardwareComponent from './HardwareComponent';
 function CheckoutPage() {
   const {username} = useParams();
   const [projList, setProjList] = useState({});
+  const [hwList, setHWList] = useState([]);
   //
   const [projectIdentifer, setProjectIdentifer] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
@@ -19,7 +20,7 @@ function CheckoutPage() {
 
   const createProject = async () => {
     try {
-      if (projectIdentifer == "" || projectNameCreate == "") {
+      if (projectIdentifer === "" || projectNameCreate === "") {
         setMessage("Project identifier and name cannot be empty")
         return
       }
@@ -47,8 +48,8 @@ function CheckoutPage() {
         body: JSON.stringify({'username': username, 'identifier': projectIdentifierJoin})
       });
       const result = await response.json();
-      if (result == 2) {setMessage("Project does not exist")}
-      else if (result == 1) {setMessage("User already in project")}
+      if (result === 2) {setMessage("Project does not exist")}
+      else if (result === 1) {setMessage("User already in project")}
       else {setMessage("Success")}
     } catch (error) {
       setMessage("Error joining project");
@@ -59,13 +60,21 @@ function CheckoutPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/home/getAllProjects', {method:'Post',
-      headers:{'Content-Type': 'application/json'},
-      body: JSON.stringify({'username': username})});
-      const jsonData = await response.json();
-      setProjList(jsonData)
+      const projectResponse = await fetch('/home/getAllProjects', {method:'Post',
+        headers:{'Content-Type': 'application/json'},
+        body: JSON.stringify({'username': username})});
+      const projectjsonData = await projectResponse.json();
+      setProjList(projectjsonData)
+    }
+    const fetchData2 = async () => {
+      const hardwareResponse = await fetch('/home/getAllHardware',
+        {headers:{'Content-Type': 'application/json'}}
+      );
+      const hardwarejsonData = await hardwareResponse.json();
+      setHWList(hardwarejsonData)
     }
     fetchData();
+    fetchData2();
   });
   
   return (
@@ -86,7 +95,7 @@ function CheckoutPage() {
         <input type="text" placeholder="Project Name" value={projectIdentifierJoin} onChange={(e) => setProjectIdentifierJoin(e.target.value)}/>
         <button onClick={joinProject}>Join Project</button>
       </div>
-      <p>{message}</p> {/* Display success or error message */}
+      <p>{message}</p> {/* Display success or error messages */}
       
       {/* Project List */}
       <div>
@@ -107,10 +116,9 @@ function CheckoutPage() {
       {/* Hardware Availability */}
       <div class="hardware-section">
         <div className="hw-set1">
-          <HardwareComponent hardwareName="Hammers" />
-          <HardwareComponent hardwareName="Nails" />
-          <HardwareComponent hardwareName="Screwdrivers" />
-          <HardwareComponent hardwareName="Screws" />
+          {hwList.map((hwset) => (
+            <HardwareComponent hardwareName={hwset} />
+          ))}
         </div>
       </div>
     </div>
