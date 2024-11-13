@@ -108,9 +108,9 @@ def getAvailable(name):
     qty = hardware.getAvailible(name)
     return jsonify(qty)
 
-@app.route('/home/<username>')
-def getUsername(username):
-    return jsonify(0)
+@app.route('/home/<username>')      # fixes refreshing page, forces page to jsonified?
+def usernameRoute(username):
+    return app.send_static_file("index.html")
 
 @app.route('/project/checkIn', methods=['Post'])
 def checkIn():
