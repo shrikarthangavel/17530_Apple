@@ -73,8 +73,12 @@ function CheckoutPage() {
       const hardwarejsonData = await hardwareResponse.json();
       setHWList(hardwarejsonData)
     }
-    fetchData();
-    fetchData2();
+    
+    const intervalId = setInterval(() => {
+      fetchData();
+      fetchData2();
+    }, 5000); // Update every 5 seconds
+    return () => clearInterval(intervalId);
   });
   
   return (
@@ -92,7 +96,7 @@ function CheckoutPage() {
 
       {/* Project Join Inputs and Button */}
       <div>
-        <input type="text" placeholder="Project Name" value={projectIdentifierJoin} onChange={(e) => setProjectIdentifierJoin(e.target.value)}/>
+        <input type="text" placeholder="Project ID" value={projectIdentifierJoin} onChange={(e) => setProjectIdentifierJoin(e.target.value)}/>
         <button onClick={joinProject}>Join Project</button>
       </div>
       <p>{message}</p> {/* Display success or error messages */}
@@ -101,7 +105,7 @@ function CheckoutPage() {
       <div>
         <h1>Projects</h1>
         <div className="projects-container">
-          {Object.values(projList).map((project) => (
+          {projList && Object.values(projList).map((project) => (
             <ProjectDetails
               name={project.name}
               hardware={project.hardware}

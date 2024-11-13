@@ -53,7 +53,7 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
   }
 
   function goToAboutPage() {
-    navigate(`/home/${username}`);
+    navigate(`/home/${username}/`);
   }
 
   function encrypt(toEncrypt, N, D) {
@@ -101,7 +101,6 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
           <button className="new-user-button" onClick={handleCreateUser}>NEW USER</button>
         </div>
       </div>
-      <button onClick={goToAboutPage}>Go To Home Page</button>
     </div>
   );
 }
