@@ -53,7 +53,7 @@ function LoginPage() {  // This 'data' comes from the parent component as a prop
   }
 
   function goToAboutPage() {
-    navigate(`/home/${username}/`);
+    navigate(`/home/${username}`);
   }
 
   function encrypt(toEncrypt, N, D) {
