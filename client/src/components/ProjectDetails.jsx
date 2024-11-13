@@ -56,18 +56,39 @@ function ProjectDetails(props) {
   };
 
   const handleCheckIn = (hwname, qty) => {  //add handle with mongo
-    const val = updatedHardwareSets[hwname]
-    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
-    updatedHardwareSetsCopy[hwname] = val + qty
-    setUpdatedHardwareSets(updatedHardwareSetsCopy)
-
+    fetch('/project/checkIn', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'project': projectName, 'hardware': hwname, 'qty': qty})
+    }).then(response => response.json())
+    .then(result => {
+      if (result == 0) { //success
+        const val = updatedHardwareSets[hwname]
+        const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+        updatedHardwareSetsCopy[hwname] = val - qty
+        setUpdatedHardwareSets(updatedHardwareSetsCopy)
+        props.changeMessage(`successfully checked in ${qty} ${hwname}`)
+      } else {  //failure
+        props.changeMessage(`could not check in ${qty} of ${hwname}`)
+      }
+    })
   };
 
   const handleCheckOut = (hwname, qty) => { //add handle with mongo
-    const val = updatedHardwareSets[hwname]
-    const updatedHardwareSetsCopy = { ...updatedHardwareSets };
-    updatedHardwareSetsCopy[hwname] = val - qty
-    setUpdatedHardwareSets(updatedHardwareSetsCopy)
+    fetch('/project/checkOut', {method:'Post',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({'project': projectName, 'hardware': hwname, 'qty': qty})
+    }).then(response => response.json())
+    .then(result => {
+      if (result == 0) { //success
+        const val = updatedHardwareSets[hwname]
+        const updatedHardwareSetsCopy = { ...updatedHardwareSets };
+        updatedHardwareSetsCopy[hwname] = val + qty
+        setUpdatedHardwareSets(updatedHardwareSetsCopy)
+        props.changeMessage(`successfully checked out ${qty} ${hwname}`)
+      } else {  //failure
+        props.changeMessage(`could not check out ${qty} of ${hwname}`)
+      }
+    })
   };
 
   return (

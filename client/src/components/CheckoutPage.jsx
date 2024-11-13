@@ -3,6 +3,7 @@ import Header from './Header';
 import './CheckoutPage.css'
 import { useParams } from 'react-router-dom';
 import ProjectDetails from './ProjectDetails';
+import HardwareComponent from './HardwareComponent';
 
 // when page is visited, backend grabs relevant dictionaries
 // from mongo and gives them to client to be displayed
@@ -101,6 +102,15 @@ function CheckoutPage() {
               changeMessage={(msg) => setMessage(msg)}
             />
           ))}
+        </div>
+      </div>
+      {/* Hardware Availability */}
+      <div class="hardware-section">
+        <div className="hw-set1">
+          <HardwareComponent hardwareName="Hammers" />
+          <HardwareComponent hardwareName="Nails" />
+          <HardwareComponent hardwareName="Screwdrivers" />
+          <HardwareComponent hardwareName="Screws" />
         </div>
       </div>
     </div>
