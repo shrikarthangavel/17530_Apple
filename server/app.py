@@ -2,8 +2,8 @@ from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 import json
 
-import users
-import projects
+from . import users #efdfsdfds
+from . import projects
 import hardware
 
 app = Flask(__name__, static_folder="client/build", static_url_path="/")
