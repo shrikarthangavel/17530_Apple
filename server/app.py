@@ -6,7 +6,7 @@ from . import users #efdfsdfds
 from . import projects
 from . import hardware
 
-app = Flask(__name__, static_folder="client/build", static_url_path="/")
+app = Flask(__name__, static_folder="build", static_url_path="/")
 CORS(app)
 uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
 
