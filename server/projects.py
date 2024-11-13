@@ -172,5 +172,3 @@ def disbandProject(project):
     client.close()
     return 0
 
-
-print(getProjectName("proj1"))

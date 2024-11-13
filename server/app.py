@@ -35,6 +35,11 @@ def getUserProjects():
     projectsDB = projects.getUserProjects(username)
     return jsonify(projectsDB)
 
+@app.route('/home/getAllHardware')
+def getHardware():
+    list = hardware.getHardwareList()
+    return jsonify(list)
+
 @app.route('/createUser', methods=['Post'])
 def createUser():
     username = request.json['username']
