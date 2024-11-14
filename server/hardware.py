@@ -62,6 +62,9 @@ def getCapacity(name):
         client.close()
 
 def checkOut(name, qty, projectname):
+    if qty < 0:
+        return 1
+
     uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
     client = MongoClient(uri)
     try:
@@ -103,6 +106,9 @@ def checkOut(name, qty, projectname):
         client.close()
 
 def checkIn(name, qty, projectname):
+    if qty < 0:
+        return 1
+    
     uri = "mongodb+srv://user:pass2@cluster0.ebypffv.mongodb.net/"
     client = MongoClient(uri)
     try:
